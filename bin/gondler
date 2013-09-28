@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'gondler/cli'
+Gondler::CLI.start
