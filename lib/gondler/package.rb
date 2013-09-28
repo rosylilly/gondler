@@ -7,6 +7,7 @@ module Gondler
       @commit = options[:commit]
       @os = options[:os]
       @group = options[:group]
+      @fix = options[:fix] || false
       @flag = options[:flag]
     end
 
