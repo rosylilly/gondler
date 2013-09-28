@@ -1,4 +1,5 @@
 require 'thor'
+require 'readline'
 require 'gondler'
 
 module Gondler
@@ -59,6 +60,13 @@ module Gondler
       puts 'Packages included by the gondler:'
       @gomfile.packages.each do |package|
         puts " * #{package}"
+      end
+    end
+
+    desc 'repl', 'REPL in the context of Gondler'
+    def repl
+      while buf = Readline.readline('> ', true)
+        Kernel.system(buf)
       end
     end
 
