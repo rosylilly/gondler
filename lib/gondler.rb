@@ -1,3 +1,4 @@
+require 'open3'
 require 'gondler/version'
 require 'gondler/env'
 require 'gondler/package'

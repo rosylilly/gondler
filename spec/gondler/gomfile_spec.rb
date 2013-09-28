@@ -3,7 +3,12 @@ require 'tempfile'
 
 describe Gondler::Gomfile do
   let(:gomfile) { described_class.new(path) }
-  let(:file) { Tempfile.open('Gomfile').tap {|f| f.print(content); f.flush } }
+  let(:file) do
+    Tempfile.open('Gomfile').tap do|f|
+      f.print(content)
+      f.flush
+    end
+  end
   let(:path) { file.path }
   let(:content) { '' }
   after { file.close! }

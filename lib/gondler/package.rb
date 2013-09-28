@@ -1,5 +1,10 @@
+require 'English'
+
 module Gondler
   class Package
+    class InstallError < StandardError
+    end
+
     def initialize(name, options = {})
       @name = name
       @branch = options[:branch]
@@ -34,7 +39,7 @@ module Gondler
     end
 
     def target
-      @tag || @branch || @commit
+      @commit || @branch || @tag
     end
 
     def installable?
@@ -44,8 +49,59 @@ module Gondler
       )
     end
 
+    def resolve
+      get
+      checkout if target
+      install
+    end
+
+    def get
+      args = %w(go get -d)
+      args << '-fix' if @fix
+      args << @name
+
+      result = `#{args.join(' ')} 2>&1`
+
+      unless $CHILD_STATUS.success?
+        raise InstallError.new("#{@name} download error\n" + result)
+      end
+    end
+
+    def checkout
+      src_path = Pathname.new(Gondler.env.path) + 'src'
+      @name.split('/').reduce(src_path) do |path, dir|
+        path += dir
+        if File.directory?(path + '.git')
+          break checkout_with_git(path)
+        elsif File.directory?(path + '.hg')
+          break checkout_with_hg(path)
+        end
+        path
+      end
+    end
+
+    def checkout_with_git(path)
+      Dir.chdir(path) do
+        `git checkout -q #{target}`
+      end
+    end
+
+    def checkout_with_hg(path)
+      Dir.chdir(path) do
+        `hg update #{target}`
+      end
+    end
+
     def install
-      return unless installable?
+      args = %w(go install)
+      args << @flag if @flag
+      args << @name
+
+      result = `#{args.join(' ')} 2>&1`
+
+      unless $CHILD_STATUS.success?
+        raise InstallError.new("#{@name} install error\n" + result)
+      end
     end
 
     def to_s

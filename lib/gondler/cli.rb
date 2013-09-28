@@ -10,11 +10,45 @@ module Gondler
       super
 
       @gomfile = Gondler::Gomfile.new(options[:gomfile])
+
+      path = Pathname.new(options[:path])
+      path = Pathname.pwd + path unless path.absolute?
+      Gondler.env.path = path
+      ENV['PATH'] = "#{path + 'bin'}:#{ENV['PATH']}"
     end
 
     desc 'install', 'Install the dependecies specified in your Gomfile'
     method_option :without, type: :array, default: []
     def install
+      @gomfile.packages.each do |package|
+        puts "Install #{package}"
+        package.resolve
+      end
+    rescue Gondler::Package::InstallError => e
+      puts e.message
+      exit(1)
+    end
+
+    desc 'build', 'Build with dependencies specified in your Gomfile'
+    def build(*args)
+      invoke :exec, %w(go build) + args
+    end
+
+    desc 'test', 'Test with dependencies specified in your Gomfile'
+    def test(*args)
+      invoke :exec, %w(go test) + args
+    end
+
+    desc 'exec', 'Execute a command in the context of Gondler'
+    def exec(*args)
+      args.map! do |arg|
+        if arg.to_s.include?(' ')
+          %Q{"#{arg.gsub(/"/, '\"')}"}
+        else
+          arg
+        end
+      end
+      Kernel.exec(*args.join(' '))
     end
 
     desc 'list', 'Show all of the dependencies in the current bundle'
@@ -26,6 +60,28 @@ module Gondler
       @gomfile.packages.each do |package|
         puts " * #{package}"
       end
+    end
+
+    desc 'version', 'Print Gondler version'
+    def version
+      puts Gondler::VERSION
+    end
+
+    def method_missing(*args)
+      if executable?(args.first)
+        invoke(:exec, args)
+      elsif executable?("gondler-#{args.first}")
+        invoke(:exec, args)
+      else
+        STDERR.puts(%Q{Could not find command "#{args.first}"})
+        exit(1)
+      end
+    end
+
+    private
+
+    def executable?(name)
+      system("hash #{name} 1> /dev/null 2>&1")
     end
   end
 end
