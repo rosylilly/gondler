@@ -49,5 +49,14 @@ describe Gondler::Package do
 
       it { should be_true }
     end
+
+    context 'when development without' do
+      before { Gondler.withouts = %w(development) }
+      after { Gondler.withouts = [] }
+
+      let(:options) { { group: 'development' } }
+
+      it { should be_false }
+    end
   end
 end

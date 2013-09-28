@@ -18,16 +18,38 @@ module Gondler
       when Array
         @os.map(&:to_s).map(&:strip)
       else
-        @os
+        nil
       end
     end
 
+    def group
+      case @group
+      when String
+        @group.split(/\s+/)
+      when Array
+        @group.map(&:to_s).map(&:strip)
+      else
+        []
+      end
+    end
+
+    def target
+      @tag || @branch || @commit
+    end
+
     def installable?
-      os.nil? || os.include?(Gondler.env.os)
+      (
+        (os.nil? || os.include?(Gondler.env.os)) &&
+        (group.empty? || (Gondler.withouts & group).empty?)
+      )
     end
 
     def install
       return unless installable?
+    end
+
+    def to_s
+      "#{@name}" + (target ? " (#{target})" : '')
     end
   end
 end
