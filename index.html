@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Gondler by rosylilly</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Gondler</h1>
+        <h2>Bundler for golang</h2>
+        <a href="https://github.com/rosylilly/gondler" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="gondler" class="anchor" href="#gondler"><span class="octicon octicon-link"></span></a>Gondler</h1>
+
+<p>bundler for golang. inspired by <a href="https://github.com/mattn/gom">gom</a>.</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<pre><code>$ gem install gondler
+</code></pre>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<ol>
+<li>
+<p>Write your Gomfile</p>
+
+<pre><code>gom 'github.com/golang/glog'
+</code></pre>
+</li>
+<li><p>Install dependency packages: <code>gondler install</code></p></li>
+<li><p>Build your application: <code>gondler build</code></p></li>
+<li><p>Run tests: <code>gondler test</code></p></li>
+</ol><h2>
+<a name="gomfile" class="anchor" href="#gomfile"><span class="octicon octicon-link"></span></a>Gomfile</h2>
+
+<p>like gom's Gomfile</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">gom</span> <span class="s1">'github.com/golang/glog'</span>
+<span class="n">package</span> <span class="s1">'github.com/golang/glog'</span>
+
+<span class="n">gom</span> <span class="s1">'github.com/golang/glog'</span><span class="p">,</span> <span class="ss">commit</span><span class="p">:</span> <span class="s1">'c6f9652c7179652e2fd8ed7002330db089f4c9db'</span>
+<span class="n">gom</span> <span class="s1">'github.com/golang/glog'</span><span class="p">,</span> <span class="ss">branch</span><span class="p">:</span> <span class="s1">'master'</span>
+<span class="n">gom</span> <span class="s1">'github.com/golang/glog'</span><span class="p">,</span> <span class="ss">tag</span><span class="p">:</span> <span class="s1">'go1'</span>
+
+<span class="n">gom</span> <span class="s1">'github.com/golang/glog'</span><span class="p">,</span> <span class="ss">group</span><span class="p">:</span> <span class="o">[</span><span class="s1">'development'</span><span class="p">,</span> <span class="s1">'test'</span><span class="o">]</span>
+<span class="n">group</span> <span class="ss">:development</span><span class="p">,</span> <span class="ss">:test</span> <span class="k">do</span>
+  <span class="n">gom</span> <span class="s1">'github.com/golang/glog'</span>
+<span class="k">end</span>
+
+<span class="n">gom</span> <span class="s1">'github.com/golang/glog'</span><span class="p">,</span> <span class="ss">os</span><span class="p">:</span> <span class="o">[</span><span class="s1">'linux'</span><span class="p">,</span> <span class="s1">'darwin'</span><span class="o">]</span>
+<span class="n">os</span> <span class="ss">:linux</span><span class="p">,</span> <span class="ss">:darwin</span> <span class="k">do</span>
+  <span class="n">gom</span> <span class="s1">'github.com/golang/glog'</span>
+<span class="k">end</span>
+</pre></div>
+
+<h2>
+<a name="commands" class="anchor" href="#commands"><span class="octicon octicon-link"></span></a>Commands</h2>
+
+<pre><code>build           # Build with dependencies specified in your Gomfile
+exec            # Execute a command in the context of Gondler
+help [COMMAND]  # Describe available commands or one specific command
+install         # Install the dependecies specified in your Gomfile
+list            # Show all of the dependencies in the current bundle
+repl            # REPL in the context of Gondler
+test            # Test with dependencies specified in your Gomfile
+version         # Print Gondler version
+</code></pre>
+
+<h2>
+<a name="custom-commands" class="anchor" href="#custom-commands"><span class="octicon octicon-link"></span></a>Custom commands</h2>
+
+<p>Gondler supports custom commands.</p>
+
+<ol>
+<li>Create a executable script file somewhere in your executable paths. It must use the following naming schema <code>gondler-your-command</code>.</li>
+<li>This file can be written in any scripting language or binaries.</li>
+<li>Now your could use it as <code>gondler your-command</code>.</li>
+</ol><h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<ol>
+<li>Fork it</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/rosylilly/gondler/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/rosylilly/gondler/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/rosylilly/gondler"></a> is maintained by <a href="https://github.com/rosylilly">rosylilly</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
