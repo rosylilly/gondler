@@ -1,5 +1,6 @@
 require 'thor'
 require 'readline'
+require 'pathname'
 require 'gondler'
 
 module Gondler
