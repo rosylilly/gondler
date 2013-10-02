@@ -1,5 +1,7 @@
 # Gondler
 
+[![Build Status](https://travis-ci.org/rosylilly/gondler.png?branch=master)](https://travis-ci.org/rosylilly/gondler)
+
 bundler for golang. inspired by [gom](https://github.com/mattn/gom).
 
 ## Installation
