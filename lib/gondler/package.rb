@@ -2,6 +2,9 @@ require 'English'
 
 module Gondler
   class Package
+
+    attr_reader :name, :branch, :tag, :commit
+
     class InstallError < StandardError
     end
 

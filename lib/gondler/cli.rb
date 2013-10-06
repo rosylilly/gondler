@@ -11,6 +11,7 @@ module Gondler
       super
 
       @gomfile = Gondler::Gomfile.new(options[:gomfile])
+      @gomfile_lock = Gondler::GomfileLock.new(options[:gomfile])
 
       path = Pathname.new(options[:path])
       path = Pathname.pwd + path unless path.absolute?
@@ -21,10 +22,15 @@ module Gondler
     desc 'install', 'Install the dependecies specified in your Gomfile'
     method_option :without, type: :array, default: []
     def install
+
       @gomfile.packages.each do |package|
         puts "Install #{package}"
         package.resolve
+        @gomfile_lock << package
       end
+
+      @gomfile_lock.freeze
+
     rescue Gondler::Package::InstallError => e
       puts e.message
       exit(1)
