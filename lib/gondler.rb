@@ -3,6 +3,7 @@ require 'gondler/version'
 require 'gondler/env'
 require 'gondler/package'
 require 'gondler/gomfile'
+require 'gondler/gomfile_lock'
 
 module Gondler
   class << self

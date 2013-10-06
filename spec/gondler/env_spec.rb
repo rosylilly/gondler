@@ -10,6 +10,9 @@ describe Gondler::Env do
   end
 
   describe '#path=' do
+    before { @gopath = env.path }
+    after { env.path = @gopath }
+
     it 'should override path environment' do
       env.path = 'spec'
       env.reload!

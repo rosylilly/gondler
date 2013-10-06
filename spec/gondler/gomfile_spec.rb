@@ -52,4 +52,5 @@ describe Gondler::Gomfile do
       expect(gomfile.packages.first.os).to eq(%w(darwin linux))
     end
   end
+
 end
