@@ -14,11 +14,15 @@ describe Gondler::Gomfile do
   after { file.close! }
 
   describe '#initialize' do
+    let(:path) { 'Gomfile' }
+
+    subject(:initialize) { described_class.new(path) }
+
     context 'without Gomfile' do
       let(:path) { '' }
 
       it 'raises Gondler::Gomfile::NotFound' do
-        expect { described_class.new(path) }.to raise_error(Gondler::Gomfile::NotFound)
+        expect { initialize }.to raise_error(Gondler::Gomfile::NotFound)
       end
     end
   end

@@ -11,26 +11,13 @@ module Gondler
     def initialize(*args)
       super
 
-      @gomfile = Gondler::Gomfile.new(options[:gomfile])
-
-      path = Pathname.new(options[:path])
-      path = Pathname.pwd + path unless path.absolute?
-      Gondler.env.path = path
-      ENV['PATH'] = "#{path + 'bin'}:#{ENV['PATH']}"
-    rescue Gomfile::NotFound => e
-      if ["help", "--help", "-h"].include?(ARGV[0])
-        help
-        exit(0)
-      else
-        say(e.to_s, :red)
-        exit(1)
-      end
+      set_environments
     end
 
     desc 'install', 'Install the dependecies specified in your Gomfile'
     method_option :without, type: :array, default: []
     def install
-      @gomfile.packages.each do |package|
+      gomfile.packages.each do |package|
         puts "Install #{package}"
         package.resolve
       end
@@ -67,16 +54,14 @@ module Gondler
       Gondler.withouts = options[:without]
 
       puts 'Packages included by the gondler:'
-      @gomfile.packages.each do |package|
+      gomfile.packages.each do |package|
         puts " * #{package}"
       end
     end
 
     desc 'repl', 'REPL in the context of Gondler'
     def repl
-      while buf = Readline.readline('> ', true)
-        Kernel.system(buf)
-      end
+      Kernel.system(buf) while buf = Readline.readline('> ', true)
     end
 
     desc 'version', 'Print Gondler version'
@@ -95,10 +80,22 @@ module Gondler
       end
     end
 
-    private
+    def set_environments
+      path = Pathname.new(options[:path])
+      path = Pathname.pwd + path unless path.absolute?
+      Gondler.env.path = path
+      ENV['PATH'] = "#{path + 'bin'}:#{ENV['PATH']}"
+    end
 
     def executable?(name)
       system("hash #{name} 1> /dev/null 2>&1")
+    end
+
+    def gomfile
+      @gomfile ||= Gondler::Gomfile.new(options[:gomfile])
+    rescue Gomfile::NotFound => e
+      say(e.message, :red)
+      exit(1)
     end
   end
 end

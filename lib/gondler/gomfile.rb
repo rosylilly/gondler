@@ -3,7 +3,7 @@ require 'gondler/package'
 module Gondler
   class Gomfile
     def initialize(path)
-      raise NotFound unless File.exist?(path)
+      raise NotFound, path unless File.exist?(path)
       @packages = []
 
       load(path)
@@ -37,6 +37,14 @@ module Gondler
       @now_os = nil
     end
 
-    class NotFound < StandardError; end
+    class NotFound < StandardError
+      def initialize(gomfile)
+        @gomfile = gomfile
+      end
+
+      def message
+        "Gondler require gomfile. Your gomfile is not found: #{@gomfile}"
+      end
+    end
   end
 end
