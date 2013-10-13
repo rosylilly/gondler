@@ -52,4 +52,12 @@ describe Gondler::Gomfile do
       expect(gomfile.packages.first.os).to eq(%w(darwin linux))
     end
   end
+
+  context 'without Gomfile' do
+    let(:path) { '' }
+
+    it 'raises Gondler::Gomfile::NotFound' do
+      expect { described_class.new(path) }.to raise_error(Gondler::Gomfile::NotFound)
+    end
+  end
 end
