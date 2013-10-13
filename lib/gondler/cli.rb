@@ -69,6 +69,13 @@ module Gondler
       puts Gondler::VERSION
     end
 
+    desc 'env', 'Print Gondler environments'
+    def env
+      system('go env')
+    end
+
+    private
+
     def method_missing(*args)
       if executable?(args.first)
         invoke(:exec, args)
