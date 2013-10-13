@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['rosylilly@aduca.org']
   spec.description   = %q{bundler for golang}
   spec.summary       = %q{bundler for golang}
-  spec.homepage      = ''
+  spec.homepage      = 'https://github.com/rosylilly/gondler'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)
