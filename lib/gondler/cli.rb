@@ -80,6 +80,7 @@ module Gondler
       if executable?(args.first)
         invoke(:exec, args)
       elsif executable?("gondler-#{args.first}")
+        args[0] = "gondler-#{args.first}"
         invoke(:exec, args)
       else
         STDERR.puts(%Q{Could not find command "#{args.first}"})
