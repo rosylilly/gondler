@@ -61,7 +61,12 @@ module Gondler
 
     desc 'repl', 'REPL in the context of Gondler'
     def repl
-      Kernel.system(buf) while buf = Readline.readline('> ', true)
+      buf = Readline.readline('> ', true)
+      while buf
+        Kernel.system(buf)
+
+        buf = Readline.readline('> ', true)
+      end
     end
 
     desc 'version', 'Print Gondler version'
