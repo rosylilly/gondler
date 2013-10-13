@@ -5,8 +5,8 @@ require 'gondler'
 
 module Gondler
   class CLI < Thor
-    class_option :gomfile, type: :string, default: 'Gomfile'
-    class_option :path, type: :string, default: '.gondler'
+    class_option :gomfile, :type => :string, :default => 'Gomfile'
+    class_option :path, :type => :string, :default => '.gondler'
 
     def initialize(*args)
       super
@@ -15,7 +15,7 @@ module Gondler
     end
 
     desc 'install', 'Install the dependecies specified in your Gomfile'
-    method_option :without, type: :array, default: []
+    method_option :without, :type => :array, :default => []
     def install
       gomfile.packages.each do |package|
         puts "Install #{package}"
@@ -49,7 +49,7 @@ module Gondler
     end
 
     desc 'list', 'Show all of the dependencies in the current bundle'
-    method_option :without, type: :array, default: []
+    method_option :without, :type => :array, :default => []
     def list
       Gondler.withouts = options[:without]
 

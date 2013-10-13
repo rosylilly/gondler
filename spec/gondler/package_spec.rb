@@ -10,13 +10,13 @@ describe Gondler::Package do
     subject { package.os }
 
     context 'with ["linux", "darwin"]' do
-      let(:options) { { os: %w(linux darwin) } }
+      let(:options) { { :os => %w(linux darwin) } }
 
       it { should == expected }
     end
 
     context 'with "linux darwin"' do
-      let(:options) { { os: 'linux darwin' } }
+      let(:options) { { :os => 'linux darwin' } }
 
       it { should == expected }
     end
@@ -33,19 +33,19 @@ describe Gondler::Package do
     end
 
     context 'when os option is darwin' do
-      let(:options) { { os: 'darwin' } }
+      let(:options) { { :os => 'darwin' } }
 
       it { should be_true }
     end
 
     context 'when os option is linux' do
-      let(:options) { { os: 'linux' } }
+      let(:options) { { :os => 'linux' } }
 
       it { should be_false }
     end
 
     context 'when os option is linux and darwin' do
-      let(:options) { { os: 'linux darwin' } }
+      let(:options) { { :os => 'linux darwin' } }
 
       it { should be_true }
     end
@@ -54,7 +54,7 @@ describe Gondler::Package do
       before { Gondler.withouts = %w(development) }
       after { Gondler.withouts = [] }
 
-      let(:options) { { group: 'development' } }
+      let(:options) { { :group => 'development' } }
 
       it { should be_false }
     end
