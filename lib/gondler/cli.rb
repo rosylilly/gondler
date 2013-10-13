@@ -17,6 +17,14 @@ module Gondler
       path = Pathname.pwd + path unless path.absolute?
       Gondler.env.path = path
       ENV['PATH'] = "#{path + 'bin'}:#{ENV['PATH']}"
+    rescue Gomfile::NotFound => e
+      if ["help", "--help", "-h"].include?(ARGV[0])
+        help
+        exit(0)
+      else
+        say(e.to_s, :red)
+        exit(1)
+      end
     end
 
     desc 'install', 'Install the dependecies specified in your Gomfile'
