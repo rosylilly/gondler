@@ -16,13 +16,13 @@ describe Gondler::Gomfile do
   describe '#initialize' do
     let(:path) { 'Gomfile' }
 
-    subject(:initialize) { described_class.new(path) }
+    subject(:init) { described_class.new(path) }
 
     context 'without Gomfile' do
       let(:path) { '' }
 
       it 'raises Gondler::Gomfile::NotFound' do
-        expect { initialize }.to raise_error(Gondler::Gomfile::NotFound)
+        expect { init }.to raise_error(Gondler::Gomfile::NotFound)
       end
     end
   end
