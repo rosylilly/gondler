@@ -3,6 +3,7 @@ require 'gondler/package'
 module Gondler
   class Gomfile
     def initialize(path)
+      raise NotFound unless File.exist?(path)
       @packages = []
 
       load(path)
@@ -35,5 +36,7 @@ module Gondler
     ensure
       @now_os = nil
     end
+
+    class NotFound < StandardError; end
   end
 end
