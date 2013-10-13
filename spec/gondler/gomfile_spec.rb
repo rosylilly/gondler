@@ -13,6 +13,16 @@ describe Gondler::Gomfile do
   let(:content) { '' }
   after { file.close! }
 
+  describe '#initialize' do
+    context 'without Gomfile' do
+      let(:path) { '' }
+
+      it 'raises Gondler::Gomfile::NotFound' do
+        expect { described_class.new(path) }.to raise_error(Gondler::Gomfile::NotFound)
+      end
+    end
+  end
+
   describe '#gom' do
     let(:content) do
       <<-CONTENT
@@ -50,14 +60,6 @@ describe Gondler::Gomfile do
 
     it 'package os should == darwin and linux' do
       expect(gomfile.packages.first.os).to eq(%w(darwin linux))
-    end
-  end
-
-  context 'without Gomfile' do
-    let(:path) { '' }
-
-    it 'raises Gondler::Gomfile::NotFound' do
-      expect { described_class.new(path) }.to raise_error(Gondler::Gomfile::NotFound)
     end
   end
 end
