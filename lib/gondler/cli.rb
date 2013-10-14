@@ -29,12 +29,17 @@ module Gondler
 
     desc 'build', 'Build with dependencies specified in your Gomfile'
     def build(*args)
-      invoke :exec, %w(go build) + args
+      invoke :go, %w(build) + args
     end
 
     desc 'test', 'Test with dependencies specified in your Gomfile'
     def test(*args)
-      invoke :exec, %w(go test) + args
+      invoke :go, %w(test) + args
+    end
+
+    desc 'go', 'Execute go command in the context of Gondler'
+    def go(*args)
+      invoke :exec, %w(go) + args
     end
 
     desc 'exec', 'Execute a command in the context of Gondler'
@@ -72,8 +77,8 @@ module Gondler
     end
 
     desc 'env', 'Print Gondler environments'
-    def env
-      system('go env')
+    def env(*args)
+      invoke :go, %w(env) + args
     end
 
     private
