@@ -51,8 +51,7 @@ describe Gondler::Package do
     end
 
     context 'when development without' do
-      before { Gondler.withouts = %w(development) }
-      after { Gondler.withouts = [] }
+      around {|e| Gondler.without(%w(development)) { e.run } }
 
       let(:options) { { :group => 'development' } }
 

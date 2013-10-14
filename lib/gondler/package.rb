@@ -45,7 +45,7 @@ module Gondler
     def installable?
       (
         (os.nil? || os.include?(Gondler.env.os)) &&
-        (group.empty? || (Gondler.withouts & group).empty?)
+        (group.empty? || (Gondler.without & group).empty?)
       )
     end
 

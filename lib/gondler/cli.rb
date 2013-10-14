@@ -1,5 +1,4 @@
 require 'thor'
-require 'readline'
 require 'pathname'
 require 'gondler'
 
@@ -15,11 +14,13 @@ module Gondler
     end
 
     desc 'install', 'Install the dependecies specified in your Gomfile'
-    method_option :without, :type => :array, :default => []
+    method_option :without, :type => :array, :default => nil
     def install
-      gomfile.packages.each do |package|
-        puts "Install #{package}"
-        package.resolve
+      Gondler.without(options[:without] || []) do
+        gomfile.packages.each do |package|
+          puts "Install #{package}"
+          package.resolve
+        end
       end
     rescue Gondler::Package::InstallError => e
       puts e.message
@@ -49,24 +50,20 @@ module Gondler
     end
 
     desc 'list', 'Show all of the dependencies in the current bundle'
-    method_option :without, :type => :array, :default => []
+    method_option :without, :type => :array, :default => nil
     def list
-      Gondler.withouts = options[:without]
-
-      puts 'Packages included by the gondler:'
-      gomfile.packages.each do |package|
-        puts " * #{package}"
+      Gondler.without(options[:without] || []) do
+        puts 'Packages included by the gondler:'
+        gomfile.packages.each do |package|
+          puts " * #{package}"
+        end
       end
     end
 
     desc 'repl', 'REPL in the context of Gondler'
     def repl
-      buf = Readline.readline('> ', true)
-      while buf
-        Kernel.system(buf)
-
-        buf = Readline.readline('> ', true)
-      end
+      require 'gondler/repl'
+      Gondler::REPL.run
     end
 
     desc 'version', 'Print Gondler version'

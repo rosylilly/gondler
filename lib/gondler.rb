@@ -6,12 +6,13 @@ require 'gondler/gomfile'
 
 module Gondler
   class << self
-    def withouts
-      @withouts || []
-    end
-
-    def withouts=(withouts)
-      @withouts = withouts.map(&:strip)
+    def without(_without = nil)
+      if block_given?
+        _without, @without = without, _without
+        yield
+        @without = _without
+      end
+      @without || []
     end
 
     def env
