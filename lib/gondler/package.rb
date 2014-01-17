@@ -56,7 +56,7 @@ module Gondler
     end
 
     def get
-      args = %w(go get -d)
+      args = %w(go get -d -u)
       args << '-fix' if @fix
       args << @name
 
