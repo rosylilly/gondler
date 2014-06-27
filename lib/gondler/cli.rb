@@ -22,6 +22,8 @@ module Gondler
           package.resolve
         end
       end
+
+      gomfile.itself_package.get if gomfile.itself_package
     rescue Gondler::Package::InstallError => e
       puts e.message
       exit(1)

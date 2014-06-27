@@ -1,4 +1,5 @@
 require 'English'
+require 'pathname'
 
 module Gondler
   class Package
@@ -14,7 +15,14 @@ module Gondler
       @group = options[:group]
       @fix = options[:fix] || false
       @flag = options[:flag]
+      @path = options[:path]
     end
+
+    attr_reader :name,
+      :branch, :tag,:commit,
+      :os, :group,
+      :fix, :flag,
+      :path
 
     def os
       case @os
@@ -56,19 +64,30 @@ module Gondler
     end
 
     def get
-      args = %w(go get -d -u)
-      args << '-fix' if @fix
-      args << @name
+      if @path
+        target = src_path.join(@name)
+        FileUtils.mkdir_p(target.dirname)
+        FileUtils.remove_entry_secure(target) if target.exist?
+        if @path.to_s.start_with?('/') # absolute path
+          source = @path
+        else # relative path from Gomfile
+          source = env_path.dirname.join(@path).relative_path_from(target.dirname)
+        end
+        File.symlink(source, target)
+      else
+        args = %w(go get -d -u)
+        args << '-fix' if @fix
+        args << @name
 
-      result = `#{args.join(' ')} 2>&1`
+        result = `#{args.join(' ')} 2>&1`
 
-      unless $CHILD_STATUS.success?
-        raise InstallError.new("#{@name} download error\n" + result)
+        unless $CHILD_STATUS.success?
+          raise InstallError.new("#{@name} download error\n" + result)
+        end
       end
     end
 
     def checkout
-      src_path = Pathname.new(Gondler.env.path) + 'src'
       @name.split('/').reduce(src_path) do |path, dir|
         path += dir
         if File.directory?(path + '.git')
@@ -106,6 +125,16 @@ module Gondler
 
     def to_s
       "#{@name}" + (target ? " (#{target})" : '')
+    end
+
+    private
+
+    def env_path
+      Pathname.new(Gondler.env.path)
+    end
+
+    def src_path
+      env_path + 'src'
     end
   end
 end
