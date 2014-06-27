@@ -18,11 +18,7 @@ module Gondler
       @path = options[:path]
     end
 
-    attr_reader :name,
-      :branch, :tag,:commit,
-      :os, :group,
-      :fix, :flag,
-      :path
+    attr_reader :name, :branch, :tag, :commit, :os, :group, :fix, :flag, :path
 
     def os
       case @os

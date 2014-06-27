@@ -33,10 +33,7 @@ module Gondler
       end
 
       if @itself
-        Gondler::Package.new(
-          @itself,
-          :path => '.'
-        )
+        Gondler::Package.new(@itself, :path => '.')
       end
     end
 
