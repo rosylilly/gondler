@@ -61,25 +61,9 @@ module Gondler
 
     def get
       if @path
-        target = src_path.join(@name)
-        FileUtils.mkdir_p(target.dirname)
-        FileUtils.remove_entry_secure(target) if target.exist?
-        if @path.to_s.start_with?('/') # absolute path
-          source = @path
-        else # relative path from Gomfile
-          source = env_path.dirname.join(@path).relative_path_from(target.dirname)
-        end
-        File.symlink(source, target)
+        get_by_path
       else
-        args = %w(go get -d -u)
-        args << '-fix' if @fix
-        args << @name
-
-        result = `#{args.join(' ')} 2>&1`
-
-        unless $CHILD_STATUS.success?
-          raise InstallError.new("#{@name} download error\n" + result)
-        end
+        get_by_package
       end
     end
 
@@ -131,6 +115,30 @@ module Gondler
 
     def src_path
       env_path + 'src'
+    end
+
+    def get_by_path
+      target = src_path.join(@name)
+      FileUtils.mkdir_p(target.dirname)
+      FileUtils.remove_entry_secure(target) if target.exist?
+      if @path.to_s.start_with?('/') # absolute path
+        source = @path
+      else # relative path from Gomfile
+        source = env_path.dirname.join(@path).relative_path_from(target.dirname)
+      end
+      File.symlink(source, target)
+    end
+
+    def get_by_package
+      args = %w(go get -d -u)
+      args << '-fix' if @fix
+      args << @name
+
+      result = `#{args.join(' ')} 2>&1`
+
+      unless $CHILD_STATUS.success?
+        raise InstallError.new("#{@name} download error\n" + result)
+      end
     end
   end
 end
