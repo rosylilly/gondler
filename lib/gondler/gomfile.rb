@@ -5,12 +5,40 @@ module Gondler
     def initialize(path)
       raise NotFound, path unless File.exist?(path)
       @packages = []
+      @itself = nil
 
       load(path)
     end
     attr_reader :packages
 
+    def itself(name)
+      @itself = name
+    end
+
+    def itself_package
+      if !@itself && Gondler.env.orig_path
+        realpath = proc do |path|
+          if File.respond_to?(:realpath) # 1.9+
+            File.realpath(path)
+          else
+            path
+          end
+        end
+
+        orig_src = realpath[File.join(Gondler.env.orig_path, 'src')]
+        dir = realpath[File.dirname(@path)]
+        if dir.start_with?(orig_src)
+          @itself = dir[orig_src.size.succ .. -1]
+        end
+      end
+
+      if @itself
+        Gondler::Package.new(@itself, :path => '.')
+      end
+    end
+
     def load(path)
+      @path = File.expand_path(path)
       instance_eval(File.read(path))
     end
 

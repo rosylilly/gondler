@@ -1,17 +1,28 @@
 require 'spec_helper'
-require 'tempfile'
+
+require 'tmpdir'
+require 'fileutils'
+require 'pathname'
 
 describe Gondler::Gomfile do
-  let(:gomfile) { described_class.new(path) }
-  let(:file) do
-    Tempfile.open('Gomfile').tap do|f|
-      f.print(content)
-      f.flush
-    end
+  let(:tmpdir) { Dir.mktmpdir("gondler-gomfile-spec") }
+  after { FileUtils.remove_entry_secure(tmpdir) }
+
+  let(:package_dir) do
+    Pathname.new(tmpdir).join('src', 'example.com', 'test').tap(&:mkpath)
   end
-  let(:path) { file.path }
+
+  let(:path) { package_dir.join('Gomfile') }
   let(:content) { '' }
-  after { file.close! }
+
+  let(:gomfile) do
+    open(path, 'w') { |io| io.write content }
+    described_class.new(path)
+  end
+
+  before do
+    allow(Gondler.env).to receive(:orig_path) { tmpdir }
+  end
 
   describe '#initialize' do
     let(:path) { 'Gomfile' }
@@ -64,6 +75,26 @@ describe Gondler::Gomfile do
 
     it 'package os should == darwin and linux' do
       expect(gomfile.packages.first.os).to eq(%w(darwin linux))
+    end
+  end
+
+  describe "#itself_package" do
+    subject(:package) { gomfile.itself_package }
+
+    it "returns package for Gomfile's repo" do
+      expect(package.name).to eq 'example.com/test'
+      expect(package.path).to eq '.'
+    end
+
+    context "with itself(...)" do
+      before do
+        gomfile.itself 'example.org/test2'
+      end
+
+      it "returns package for Gomfile's repo, but different dir" do
+        expect(package.name).to eq 'example.org/test2'
+        expect(package.path).to eq '.'
+      end
     end
   end
 end

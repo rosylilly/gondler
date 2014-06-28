@@ -2,6 +2,11 @@ module Gondler
   class Env
     class << self
       def accessor(name, source)
+        original_value = ENV[source.to_s]
+        define_method("orig_#{name}") do
+          original_value
+        end
+
         define_method(name) do
           @environments[source]
         end
