@@ -24,6 +24,8 @@ bundler for golang. inspired by [gom](https://github.com/mattn/gom).
 like gom's Gomfile
 
 ```ruby
+itself 'github.com/rosylilly/test'
+
 gom 'github.com/golang/glog'
 package 'github.com/golang/glog'
 
