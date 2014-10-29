@@ -16,9 +16,10 @@ module Gondler
       @fix = options[:fix] || false
       @flag = options[:flag]
       @path = options[:path]
+      @alternate_name = options[:alternate_name] || options[:alias_as] || options[:as]
     end
 
-    attr_reader :name, :branch, :tag, :commit, :os, :group, :fix, :flag, :path
+    attr_reader :name, :branch, :tag, :commit, :os, :group, :fix, :flag, :path, :alternate_name
 
     def os
       case @os
@@ -64,6 +65,10 @@ module Gondler
         get_by_path
       else
         get_by_package
+      end
+
+      if alternate_name
+        link_alternate_name
       end
     end
 
@@ -139,6 +144,16 @@ module Gondler
       unless $CHILD_STATUS.success?
         raise InstallError.new("#{@name} download error\n" + result)
       end
+    end
+
+    def link_alternate_name
+      actual_path = src_path.join(@name)
+      alternate_path = src_path.join(alternate_name)
+
+      alternate_path.mkpath
+      FileUtils.remove_entry_secure(alternate_path) unless alternate_path.symlink?
+
+      alternate_path.make_symlink(actual_path)
     end
   end
 end
