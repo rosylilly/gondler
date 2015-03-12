@@ -26,6 +26,8 @@ like gom's Gomfile
 ```ruby
 itself 'github.com/rosylilly/test'
 
+autodetect
+
 gom 'github.com/golang/glog'
 package 'github.com/golang/glog'
 
