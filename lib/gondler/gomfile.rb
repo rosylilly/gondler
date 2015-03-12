@@ -65,6 +65,14 @@ module Gondler
       @now_os = nil
     end
 
+    def autodetect
+      deps = `go list -f '{{join .Deps "\\n"}}' ./...`.strip.split(/\n+/)
+
+      deps.each do |dep|
+        gom(dep) unless dep.include?('.')
+      end
+    end
+
     class NotFound < StandardError
       def initialize(gomfile)
         @gomfile = gomfile

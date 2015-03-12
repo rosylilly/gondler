@@ -97,4 +97,41 @@ describe Gondler::Gomfile do
       end
     end
   end
+
+  describe '#autodetect' do
+    subject(:packages) { gomfile.packages }
+
+    it "returns empty" do
+      expect(packages).to be_empty
+    end
+
+    context 'with autodetect' do
+      around do |e|
+        Dir.chdir(tmpdir) do
+          e.run
+        end
+      end
+
+      before do
+        open(File.join(tmpdir, "example.go"), 'w') do |f|
+          f.write(<<-EOF)
+          package example
+
+          import (
+            "github.com/golang/glog"
+          )
+
+          func main() {
+          }
+          EOF
+        end
+
+        gomfile.autodetect
+      end
+
+      it "returns not empty" do
+        expect(packages).to_not be_empty
+      end
+    end
+  end
 end
