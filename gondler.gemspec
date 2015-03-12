@@ -19,5 +19,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'rake'
-  spec.add_dependency 'thor', '~> 0.18.1'
+  spec.add_dependency 'thor', '>= 0.18.1'
 end
