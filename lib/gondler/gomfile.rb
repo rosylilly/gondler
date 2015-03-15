@@ -69,8 +69,14 @@ module Gondler
       deps = `go list -f '{{join .Deps "\\n"}}' ./...`.strip.split(/\n+/)
 
       deps.each do |dep|
-        gom(dep) unless dep.include?('.')
+        gom(dep) if external?(dep)
       end
+    end
+
+    private
+
+    def external?(pkg)
+      pkg.include?('.') && (@itself.to_s.empty? || !pkg.include?(@itself.to_s))
     end
 
     class NotFound < StandardError
